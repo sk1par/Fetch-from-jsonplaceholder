@@ -1,45 +1,74 @@
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import jsonApi from '../../api/jsonApi';
 import User from '../user/User';
-;
+import IUser from '../../models/user.interface';
+import { useDispatch } from 'react-redux';
+import { selectedUser } from '../../actions';
 
-interface IUser {
-    email: string;
-    id: number;
-    name: string;
-    phone: string;
-    username: string;
-    website: string;
-  }
+interface LocalStorageUsers {
+  timeToExpire: Date;
+  users: IUser[];
+}
 
 const UserList = () => {
-    const history = useHistory();
-    const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const itemsFromLocalStorage: LocalStorageUsers = JSON.parse(localStorage.getItem('users') || '{}');
+  const dispatch = useDispatch();
 
-    const getUsers = async () => {
+  const selectUser = (user: IUser) => {
+    dispatch(selectedUser(user));
+  };
+
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const checkTimes = () => {
+    const timeNow = new Date();
+    timeNow.setMinutes(timeNow.getMinutes() - 5);
+    const timeFromLocalStorage: Date = itemsFromLocalStorage?.timeToExpire;
+    if (timeFromLocalStorage && (timeNow.getTime() > new Date(itemsFromLocalStorage?.timeToExpire).getTime())) {
+      return true
+    } else {
+      return false;
+    }
+  };
+
+  const getUsers = async () => {
+    if ((!itemsFromLocalStorage.users && !itemsFromLocalStorage.timeToExpire) ||
+      (checkTimes() && (itemsFromLocalStorage.users && itemsFromLocalStorage.timeToExpire))) {
       const response = await jsonApi.get('/users')
       setUsers(response.data);
-    };
+      saveToLocalStorage(response.data);
+    } else {
+      await setUsers(itemsFromLocalStorage.users);
+    }
 
-    return (
-        <div className="container">
-        <div className="col-xs-8">
-          <h1 className='title'>React Users App</h1>
-          <div className='button-div'>
-          <button type="button" className="btn btn-outline-primary"
-             onClick={() => history.push('/')} style={{ marginBottom: "10px", marginRight: "10px" }}>Home Page</button>
-            <button type="button" className="btn btn-outline-primary" onClick={getUsers} style={{ marginBottom: "10px" }}>Get Users</button>
-          </div>
-          {users.map((user: IUser) => (
-            <Link to={`/user/${user.id}`} key={user.id}>
+  };
+
+  const saveToLocalStorage = (users: IUser[]) => {
+    const objForLocalStorage = {
+      timeToExpire: new Date(),
+      users: users
+    }
+    localStorage.setItem('users', JSON.stringify(objForLocalStorage));
+  };
+
+  return (
+    <div className="container">
+      <div className="col-xs-8">
+        {users?.map((user: IUser) => (
+          <div onClick={() => selectUser(user)} key={user.id}>
+            <Link to={`/user/${user.id}`}>
               <User user={user} />
             </Link>
-
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    )
+    </div>
+  )
 }
 
 export default UserList

@@ -1,2 +1,2 @@
-export { default as selectedUser} from './selectedUser';
+export { default as setSelectedUser} from './setSelectedUser';
 export { default as addToFavorite } from './addToFavorite';

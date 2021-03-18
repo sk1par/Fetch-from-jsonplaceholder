@@ -1,10 +1,10 @@
 import IUser from "../models/user.interface";
 
-const selectedUser = (user?: IUser) => {
+const setSelectedUser= (user?: IUser) => {
     return {
         type: 'SELECTED_USER',
         payload: user
     }
 }
 
-export default selectedUser;
+export default setSelectedUser;

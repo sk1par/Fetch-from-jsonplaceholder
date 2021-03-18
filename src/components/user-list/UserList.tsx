@@ -4,56 +4,37 @@ import jsonApi from '../../api/jsonApi';
 import User from '../user/User';
 import IUser from '../../models/user.interface';
 import { useDispatch } from 'react-redux';
-import { selectedUser } from '../../actions';
+import { setSelectedUser } from '../../actions';
+import {useUsers} from '../../hooks/useUsers';
+import {checkTimes} from '../../utils/utils';
+import {LocalStorageUsers} from '../../models/localStorageUsers.interface';
 
-interface LocalStorageUsers {
-  timeToExpire: Date;
-  users: IUser[];
-}
 
 const UserList = () => {
   const [users, setUsers] = useState<IUser[]>([]);
-  const itemsFromLocalStorage: LocalStorageUsers = JSON.parse(localStorage.getItem('users') || '{}');
+  const [localStorageUsers, setLocalStorageUsers] = useUsers('users', []);
   const dispatch = useDispatch();
+  let itemsFromLocalStorage: LocalStorageUsers;
 
   const selectUser = (user: IUser) => {
-    dispatch(selectedUser(user));
+    dispatch(setSelectedUser(user));
   };
 
-
   useEffect(() => {
+    itemsFromLocalStorage = JSON.parse(localStorage.getItem('users') || '{}');
     getUsers();
   }, []);
 
-  const checkTimes = () => {
-    const timeNow = new Date();
-    timeNow.setMinutes(timeNow.getMinutes() - 5);
-    const timeFromLocalStorage: Date = itemsFromLocalStorage?.timeToExpire;
-    if (timeFromLocalStorage && (timeNow.getTime() > new Date(itemsFromLocalStorage?.timeToExpire).getTime())) {
-      return true
-    } else {
-      return false;
-    }
-  };
-
   const getUsers = async () => {
     if ((!itemsFromLocalStorage.users && !itemsFromLocalStorage.timeToExpire) ||
-      (checkTimes() && (itemsFromLocalStorage.users && itemsFromLocalStorage.timeToExpire))) {
+      (checkTimes(itemsFromLocalStorage) && (itemsFromLocalStorage.users && itemsFromLocalStorage.timeToExpire))) {
       const response = await jsonApi.get('/users')
       setUsers(response.data);
-      saveToLocalStorage(response.data);
+      setLocalStorageUsers(response.data);
     } else {
-      await setUsers(itemsFromLocalStorage.users);
+      await setUsers(localStorageUsers.users);
     }
 
-  };
-
-  const saveToLocalStorage = (users: IUser[]) => {
-    const objForLocalStorage = {
-      timeToExpire: new Date(),
-      users: users
-    }
-    localStorage.setItem('users', JSON.stringify(objForLocalStorage));
   };
 
   return (

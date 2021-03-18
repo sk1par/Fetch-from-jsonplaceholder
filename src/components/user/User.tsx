@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { selectedUser } from '../../actions';
+import { setSelectedUser } from '../../actions';
 import IUser from '../../models/user.interface';
 
 interface User {
@@ -10,7 +10,7 @@ const User = ({ user }: User) => {
     const dispatch = useDispatch();
 
     const selectUser = () => {
-        dispatch(selectedUser(user));
+        dispatch(setSelectedUser(user));
     };
 
     return (

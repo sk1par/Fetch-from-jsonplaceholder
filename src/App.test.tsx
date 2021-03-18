@@ -1,9 +1,17 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import Enzyme, { mount, shallow } from 'enzyme';
+import { MemoryRouter, Link } from 'react-router-dom';
+import Home from './components/home/Home';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+Enzyme.configure({ adapter: new Adapter() });
+
+
+it('should render correct link to Home component', () => {                                       
+  const wrapper = mount(
+    <MemoryRouter initialEntries={['/']}>
+      <App/>
+    </MemoryRouter>
+  );
+  expect(wrapper.find(Home)).toHaveLength(1);
+ });

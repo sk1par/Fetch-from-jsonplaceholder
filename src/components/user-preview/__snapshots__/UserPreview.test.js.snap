@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render User Preview component correctly 1`] = `ShallowWrapper {}`;
+
+exports[`should trigger add to favorite action correctly after click 1`] = `ReactWrapper {}`;

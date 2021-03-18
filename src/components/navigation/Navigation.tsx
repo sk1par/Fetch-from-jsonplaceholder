@@ -18,7 +18,7 @@ const Navigation = () => {
                 </button>
                 <button type="button"
                     className="btn btn-outline-primary"
-                    onClick={() => history.push('user-list')}
+                    onClick={() => history.push('/user-list')}
                     style={{ marginBottom: "10px" }}>
                     Get Users
                 </button>

@@ -1,4 +1,3 @@
-import React from 'react'
 import IUser from '../../models/user.interface'
 
 interface User {
@@ -7,7 +6,7 @@ interface User {
 
 const FavoriteUser = ({user}: User) => {
     return (
-        <div className="col-auto mb-3">
+        <div className="col-auto mb-3" data-auto-id='user-detail-div'>
             <div className="card" style={{width: '18rem'}}>
                 <div className="card-body">
                     <h5 className="card-title">Name:{user?.name}</h5>

@@ -2,11 +2,11 @@ import { useDispatch } from 'react-redux';
 import { setSelectedUser } from '../../actions';
 import IUser from '../../models/user.interface';
 
-interface User {
+interface UserInterface {
     user: IUser;
 }
 
-const User = ({ user }: User) => {
+const User = ({ user }: UserInterface) => {
     const dispatch = useDispatch();
 
     const selectUser = () => {
@@ -14,7 +14,7 @@ const User = ({ user }: User) => {
     };
 
     return (
-        <div className="card" onClick={selectUser}>
+        <div className="card" onClick={selectUser} data-auto-id='user-div'>
             <div className="card-body">
                 <h5 className="card-title">{user?.name}</h5>
                 <h6 className="card-subtitle mb-2 text-muted">

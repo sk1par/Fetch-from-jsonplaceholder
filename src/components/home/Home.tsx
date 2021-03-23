@@ -1,9 +1,6 @@
-
 const Home = () => {
-
   return (
-   
-<div className="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" data-auto-id='home-div'>
+    <div className="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" data-auto-id='home-div'>
       <div className="col-md-5 p-lg-5 mx-auto my-5">
         <h1 className="display-4 font-weight-normal">Home Page</h1>
         <p className="lead font-weight-normal">And an even wittier subheading to boot. Jumpstart your marketing efforts with this example based on Apple's marketing pages.</p>

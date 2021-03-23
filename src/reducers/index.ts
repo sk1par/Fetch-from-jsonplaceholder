@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
 import selectedUser from './selectedUserReducer';
 import addToFavorite from './addToFavoriteReducer';
+import setAuthReducer from './setAuthReducer';
 
 const rootReducer = combineReducers({
     selectedUser,
-    addToFavorite
+    addToFavorite,
+    setAuthReducer
 });
 
 export default rootReducer;

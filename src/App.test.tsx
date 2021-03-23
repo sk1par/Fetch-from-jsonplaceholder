@@ -16,12 +16,3 @@ it('should render correct link to Home component', () => {
   );
   expect(wrapper.find(Home)).toHaveLength(1);
  });
-
- it('should render correct link to UserList component', () => {
-  const wrapper = mount(
-    <MemoryRouter initialEntries={['/user-list']}>
-      <App/>
-    </MemoryRouter>
-  );
-  expect(wrapper.find(UserList)).toHaveLength(1);
- });

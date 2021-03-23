@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render User User List component correctly 1`] = `ShallowWrapper {}`;
+
+exports[`should trigger set selected user action correctly after click 1`] = `
+<div
+  className="container"
+  data-auto-id="user-list-div"
+>
+  <div
+    className="col-xs-8"
+  >
+    <div
+      data-auto-id="user-element-div"
+      onClick={[Function]}
+    >
+      <Link
+        to="/user/undefined"
+      >
+        <User
+          user={
+            Array [
+              Object {
+                "email": "test@abv.bg",
+                "id": 1,
+                "name": "test",
+                "phone": "123132",
+                "username": "skipar",
+                "website": "abv.bg",
+              },
+            ]
+          }
+        />
+      </Link>
+    </div>
+  </div>
+</div>
+`;

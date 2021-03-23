@@ -1,15 +1,8 @@
-import Enzyme, { mount, shallow } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { mount, shallow } from 'enzyme';
 import UserPreview from './UserPreview';
 import { useSelector } from 'react-redux';
 import  addToFavorite from '../../actions/addToFavorite';
 
-
-Enzyme.configure({ adapter: new Adapter() });
-jest.mock('react-redux', () => ({
-    useDispatch: () => (fn) => () => fn(),
-    useSelector: jest.fn(() => []),
-}));
 jest.mock('../../actions/addToFavorite', () => {
     const addToFavorite = jest.fn();
     return addToFavorite;
@@ -31,7 +24,7 @@ it('should render User Preview component correctly', () => {
     expect(wrapper).toMatchSnapshot();
 });
 
-it.only('should trigger add to favorite action correctly after click', () => {
+it('should trigger add to favorite action correctly after click', () => {
     const value = getInitialObject();
     useSelector.mockReturnValueOnce(value);
     const wrapper = mount(<UserPreview />);

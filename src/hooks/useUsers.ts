@@ -1,32 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IUser from '../models/user.interface';
+import { checkTimes } from '../utils/utils';
+import jsonApi from '../api/jsonApi';
+import { LocalStorageUsers } from '../models/localStorageUsers.interface';
+import saveToLocalStorage from '../utils/saveToLocalStorage';
+import { isTimeExpire } from '../utils/isTimeExpire';
 
-export const useUsers = (key: string, initialValue: IUser | []) => {
-    // State to store our value
-    // Pass initial state function to useState so logic is only executed once
-    const [storedValue, setStoredValue] = useState(() => {
-        const item = window.localStorage.getItem(key);
-        // Parse stored json or if none return initialValue
-        return item ? JSON.parse(item) : initialValue;
+export const useUsers = () => {
+    const [users, setUsers] = useState<IUser[]>([]);
+    const [error, setError] = useState(false);
+    let itemsFromLocalStorage: LocalStorageUsers;
 
-    });
 
-    // Return a wrapped version of useState's setter function that ...
-    // ... persists the new value to localStorage.
-    const setValue = (users: IUser) => {
+    useEffect(() => {
+        itemsFromLocalStorage = JSON.parse(localStorage.getItem('users') || '{}');
+        getUsers();
+    }, []);
 
-        const objForLocalStorage = {
-            timeToExpire: new Date(),
-            users: users
+    const getUsers = async () => {
+        if (isTimeExpire(itemsFromLocalStorage)) {
+            const response = await jsonApi.get('/users');
+            if (!response.data.message) {
+                setUsers(response.data);
+                saveToLocalStorage(response.data);
+            } else {
+                setError(true);
+            }
+        } else {
+            await setUsers(itemsFromLocalStorage.users);
         }
-        const valueToStore =
-            users instanceof Function ? users(storedValue) : users;
-        // Save state
-        setStoredValue(valueToStore);
-        // Save to local storage
-        window.localStorage.setItem(key, JSON.stringify(objForLocalStorage));
-
     };
 
-    return [storedValue, setValue];
+    return {users, error};
 }
